@@ -1,51 +1,49 @@
 import React, { useState } from "react";
-import { Food } from "./Food";
+import { Food } from "./FoodCard";
 import foods from "../foods/foods";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import Diet from "./Diet";
 import Alert from "@mui/material/Alert";
 import SearchIcon from "@mui/icons-material/Search";
+import { set } from "../states/foods/foodsSlice";
 
-export const DietSolver = () => {
+export const DietMaker = () => {
   const [data, setData] = useState({});
   const [search, setSearch] = useState("");
   const [alert, setAlert] = useState(false);
+
   const foodNames = Object.keys(foods);
   const selectedFoodNames = useSelector((state) => state.foods.value);
-  const states = foodNames.map((foodName) => {
-    if (selectedFoodNames.includes(foodName)) {
-      return <Food key={foodName} name={foodName} clicked={true} />;
-    } else {
-      return <Food key={foodName} name={foodName} clicked={false} />;
-    }
-  });
+  const dispatch = useDispatch();
 
-  var dynamicColors = () => {
-    var r = Math.floor(Math.random() * 255);
-    var g = Math.floor(Math.random() * 255);
-    var b = Math.floor(Math.random() * 255);
-    return "rgb(" + r + "," + g + "," + b + ")";
-  };
+  // Generate dynamic colors for the pie chart
+  const generateRandomColor = () =>
+    `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${
+      Math.random() * 255
+    })`;
 
-  const colors = selectedFoodNames.map(() => dynamicColors());
+  const colors = selectedFoodNames.map(() => generateRandomColor());
 
-  const handleClick = () => {
+  // Reset selections
+  const resetSelections = () => {
     setData({});
+    dispatch(set([]));
   };
 
-  const handleChange = (e) => {
+  // Handle search input
+  const handleSearchChange = (e) => {
     setSearch(e.target.value);
   };
 
-  const handleSubmit = async (e) => {
+  // Handle form submission
+  const handleSubmit = async () => {
     const foodList = selectedFoodNames.map((input) => {
       const name = input;
       const { price, nutrition_list } = foods[name];
       return { name, price, nutrition: nutrition_list };
     });
 
-    // Deconstruct data into arrays
     const prices = foodList.map((item) => item.price);
     const [
       calories,
@@ -63,10 +61,7 @@ export const DietSolver = () => {
       foodList.map((item) => item.nutrition[i])
     );
 
-    // Helper function to generate positive and negative values
     const generateValues = (arr) => [...arr, ...arr.map((x) => x * -1)];
-
-    // Prepare the values array
     const values = [
       [
         ...generateValues(calories),
@@ -85,7 +80,6 @@ export const DietSolver = () => {
       foodList.length,
     ];
 
-    // Send data to the API
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/createmodel",
@@ -93,12 +87,13 @@ export const DietSolver = () => {
         { headers: { "Content-Type": "application/json" } }
       );
 
-      // Log the response
       setData(response.data);
       if (response.data.status === "error") {
         setAlert(true);
-        setTimeout(() => setData({}), 2100);
-        setTimeout(() => setAlert(false), 2100);
+        setTimeout(() => {
+          setData({});
+          setAlert(false);
+        }, 2100);
       }
     } catch (error) {
       console.error("Error posting data:", error);
@@ -106,62 +101,71 @@ export const DietSolver = () => {
   };
 
   return (
-    <>
+    <div className="flex flex-col w-full h-screen overflow-hidden bg-gray-100">
       {Object.keys(data).length === 0 || data.status === "error" ? (
-        <div className="relative w-3/4 h-[100vh] flex flex-col">
-          <div className="flex mt-5 justify-between">
-            <h2 className="italic text-lg -ml-5">
+        <div className="relative w-full h-full flex flex-col px-8 py-4">
+          {/* Header */}
+          <div className="flex h-10 justify-between items-center mb-4">
+            <h2 className="italic text-lg text-gray-700">
               Select items for your diet...
             </h2>
-            {selectedFoodNames.length != 0 && (
+            {selectedFoodNames.length > 0 && (
               <button
-                className="bg-green-600 rounded-3xl w-44 h-10"
+                className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md"
                 onClick={handleSubmit}
               >
                 Done
               </button>
             )}
           </div>
-          <div className="flex w-96 justifty-center items-center">
-            <SearchIcon className="fill-blue-500 z-10" />
+
+          {/* Search Bar */}
+          <div className="flex w-96 items-center bg-white shadow-md rounded-full px-4 py-2 mb-6">
+            <SearchIcon className="text-blue-500" />
             <input
-              className="w-full h-10 bg-transparent rounded-3xl p-5 placeholder-slate-500 mb-3 z-0"
-              placeholder="Search..."
-              type="text"
-              id="search"
-              name="search"
+              className="flex-grow bg-transparent focus:outline-none px-4 text-gray-700"
+              placeholder="Search foods..."
               value={search}
-              onChange={handleChange}
+              onChange={handleSearchChange}
             />
           </div>
 
-          <div className="mt-5 flex-1 overflow-y-auto no-scrollbar">
-            <div className="grid grid-cols-4 gap-10">
-              {states.filter((element) =>
-                element.props.name.toLowerCase().includes(search.toLowerCase())
-              )}
+          {/* Food Grid */}
+          <div className="flex-1 overflow-y-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-5 ml-10">
+              {foodNames
+                .filter((name) =>
+                  name.toLowerCase().includes(search.toLowerCase())
+                )
+                .map((foodName) => (
+                  <Food
+                    key={foodName}
+                    name={foodName}
+                    clicked={selectedFoodNames.includes(foodName)}
+                    image={foods[foodName].image}
+                  />
+                ))}
             </div>
           </div>
-          <div
-            className={`transition-all delay-[2000ms] absolute mb-5 rounded-xl overflow-hidden bottom-0 place-self-center ${
-              alert ? "opacity-0" : ""
-            }`}
-          >
-            {Object.keys(data).length > 0 && data.status === "error" && (
-              <Alert className="place-self-center" severity="error">
-                {data.message}
-              </Alert>
-            )}
-          </div>
+
+          {/* Alert */}
+          {alert && data.status === "error" && (
+            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2">
+              <Alert severity="error">{data.message}</Alert>
+            </div>
+          )}
         </div>
       ) : (
         <Diet
           selectedFoodNames={selectedFoodNames}
-          data={data}
-          newDiet={handleClick}
+          basicSolution={data.basicSolution}
+          Z={data.Z}
+          newDiet={resetSelections}
           colors={colors}
+          iterations={data.iterations}
+          forViewing={false}
         />
       )}
-    </>
+    </div>
   );
 };
