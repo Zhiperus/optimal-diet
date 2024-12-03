@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { add, del } from "../states/foods/foodsSlice";
 
-export const Food = ({ name, clicked, image }) => {
+export const FoodCard = ({ name, clicked, image }) => {
   const [click, setClick] = useState(clicked);
   const dispatch = useDispatch();
 

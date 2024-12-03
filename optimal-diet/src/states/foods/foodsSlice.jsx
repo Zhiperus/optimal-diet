@@ -7,7 +7,9 @@ const foodsSlice = createSlice({
   initialState,
   reducers: {
     add: (state, action) => {
-      state.value.push(action.payload);
+      let foods = state.value;
+      foods.push(action.payload);
+      state.value = foods;
     },
     del: (state, action) => {
       state.value = state.value.filter(
