@@ -35,6 +35,11 @@ export const DietMaker = () => {
     setData({}); // Resetting the local data state
   };
 
+  // Function to handle selecting all food items
+  const selectAllFoods = () => {
+    dispatch(set(foodNames)); // Update Redux state with all food names
+  };
+
   // Function to handle changes in the search input
   const handleSearchChange = (e) => {
     setSearch(e.target.value); // Updating the search state with the new value
@@ -123,7 +128,7 @@ export const DietMaker = () => {
             </h2>
             {selectedFoodNames.length > 0 && (
               <div className="flex gap-5">
-                {/* Buttons for submitting and resetting the diet */}
+                {/* Buttons for submitting, resetting, and selecting all foods */}
                 <button
                   className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md"
                   onClick={handleSubmit} // Submit the form
@@ -131,10 +136,16 @@ export const DietMaker = () => {
                   Done
                 </button>
                 <button
-                  className="bg-red-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md"
+                  className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md"
                   onClick={resetSelections} // Reset the selections
                 >
                   Reset
+                </button>
+                <button
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md"
+                  onClick={selectAllFoods} // Select all foods
+                >
+                  Select All
                 </button>
               </div>
             )}
