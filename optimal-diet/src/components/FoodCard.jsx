@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { add, del } from "../states/foods/foodsSlice";
 
@@ -27,7 +27,7 @@ export const FoodCard = ({ name, clicked, image }) => {
         <img className="w-full h-[200px] z-0" src={`${image}`}></img>
       </div>
 
-      <h2 className="flex justify-center items-center h-3/4 text-lg font-[Georgia]">
+      <h2 className="flex justify-center items-center text-center h-3/4 text-lg font-[Georgia]">
         {name}
       </h2>
     </div>

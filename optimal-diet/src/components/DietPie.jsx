@@ -1,4 +1,3 @@
-// src/components/PieChart.js
 import React from "react";
 import { Pie } from "react-chartjs-2";
 import { ArcElement, Tooltip, Legend, Chart, Title } from "chart.js";
@@ -7,16 +6,31 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 Chart.register(ArcElement, Tooltip, Legend, Title);
 
 function DietPie({ foods, serving, colors }) {
+  // Filter out foods with serving 0
+  const filteredData = foods
+    .map((food, index) => ({
+      food,
+      serving: serving[index],
+      color: colors[index],
+    }))
+    .filter((item) => item.serving > 0);
+
+  console.log(foods, serving);
+
+  const filteredFoods = filteredData.map((item) => item.food);
+  const filteredServing = filteredData.map((item) => item.serving);
+  const filteredColors = filteredData.map((item) => item.color);
+
   return (
     <div className="relative flex flex-col items-center gap-5 w-full h-2/3">
       <Pie
         data={{
-          labels: foods,
+          labels: filteredFoods,
           datasets: [
             {
               label: "Servings",
-              data: serving,
-              backgroundColor: [...colors],
+              data: filteredServing,
+              backgroundColor: filteredColors,
               hoverOffset: 4,
             },
           ],
@@ -45,7 +59,10 @@ function DietPie({ foods, serving, colors }) {
               formatter: (val, ctx) => {
                 const percentage = (
                   (ctx.chart.data.datasets[0].data[ctx.dataIndex] /
-                    serving.reduce((partialSum, a) => partialSum + a, 0)) *
+                    filteredServing.reduce(
+                      (partialSum, a) => partialSum + a,
+                      0
+                    )) *
                   100
                 ).toFixed(1); // Show one decimal point for clarity
                 return `${

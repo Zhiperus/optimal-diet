@@ -183,7 +183,7 @@ const Diet = ({
             ) : (
               <DietPie
                 foods={selectedFoodNames}
-                serving={basicSolution.slice(1, selectedFoodNames.length)}
+                serving={basicSolution.slice(0, selectedFoodNames.length)}
                 colors={colors} // Pass data to DietPie for pie chart view
               />
             )}

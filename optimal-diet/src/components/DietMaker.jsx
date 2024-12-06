@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"; // Importing necessary hooks from React
+import React, { useState } from "react"; // Importing necessary hooks from React
 import { FoodCard } from "./FoodCard"; // Importing FoodCard component to display food items
 import foods from "../foods/foods"; // Importing the foods data
 import { useDispatch, useSelector } from "react-redux"; // Importing Redux hooks
@@ -7,6 +7,7 @@ import Diet from "./Diet"; // Importing Diet component to display the final diet
 import Alert from "@mui/material/Alert"; // Importing Material-UI Alert component for error messages
 import SearchIcon from "@mui/icons-material/Search"; // Importing Material-UI Search Icon for the search bar
 import { set } from "../states/foods/foodsSlice"; // Importing Redux action to reset selected foods
+import { ConstructionOutlined } from "@mui/icons-material";
 
 // Main DietMaker component
 export const DietMaker = () => {
