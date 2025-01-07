@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { DietCard } from "./DietCard";
 import { useSelector } from "react-redux";
-import Diet from "./Diet";
+import { Diet } from "./Diet";
 
 const Diets = () => {
   const [view, setView] = useState(false);
