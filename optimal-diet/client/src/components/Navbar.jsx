@@ -17,8 +17,6 @@ export const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  console.log(user.image);
-
   const userName = user.name || "Guest";
   const profileImage =
     user.image !== ""
