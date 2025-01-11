@@ -1,27 +1,36 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { login } from "../states/user/userSlice";
+
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import axios from "axios";
+import md5 from "md5";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import CancelIcon from "@mui/icons-material/Cancel";
 
-const Signup = ({ changeTab }) => {
+import { login } from "../states/user/userSlice";
+import { toBase64 } from "../utils/utilities";
+
+const Signup = () => {
   const [error, setError] = useState("");
   const [image, setImage] = useState(null);
+  const [passVisibility, setPassVisibility] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const name = e.target[1].value;
-    const email = e.target[2].value;
-    const password = e.target[3].value;
+    const name = e.target.name.value;
+    const email = e.target.email.value;
+    const password = e.target.password.value;
 
     const formData = new FormData();
     formData.append("image", image);
     formData.append("name", name);
     formData.append("email", email);
-    formData.append("password", password);
+    formData.append("password", md5(password));
 
     try {
       const response = await axios.post(
@@ -32,10 +41,20 @@ const Signup = ({ changeTab }) => {
         }
       );
 
+      const {
+        _id,
+        image: { data: buffer },
+      } = response.data;
+
       dispatch(
-        login({ _id: response.data._id, image: image, name: name, diets: [] })
+        login({
+          _id: _id,
+          image: toBase64(buffer),
+          name: name,
+          diets: [],
+        })
       );
-      changeTab("Diets");
+      navigate("/dietmaker");
     } catch (e) {
       setError(e.response.data);
     }
@@ -69,29 +88,52 @@ const Signup = ({ changeTab }) => {
               </button>
             </div>
           ) : (
-            <label className="flex justify-center items-center place-self-center h-20 w-20 bg-gray-200 rounded-full cursor-pointer hover:bg-gray-300">
-              <AddPhotoAlternateIcon className="text-gray-600" />
-              <input type="file" hidden required onChange={handleUpload} />
-            </label>
+            <div className="flex justify-center">
+              <label className="flex justify-center items-center h-20 w-20 bg-gray-200 rounded-full cursor-pointer hover:bg-gray-300">
+                <AddPhotoAlternateIcon className="text-gray-600" />
+                <input
+                  name="image"
+                  type="file"
+                  hidden
+                  required
+                  onChange={handleUpload}
+                  accept="image/*"
+                />
+              </label>
+            </div>
           )}
           <input
+            name="name"
             placeholder="Name"
             type="text"
             required
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
           <input
+            name="email"
             placeholder="Email"
             type="email"
             required
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
-          <input
-            placeholder="Password"
-            type="password"
-            required
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
+          <div className="relative">
+            <button
+              className="absolute bottom-2 right-3 z-10"
+              onClick={(e) => {
+                e.preventDefault();
+                setPassVisibility(!passVisibility);
+              }}
+            >
+              {passVisibility ? <VisibilityOffIcon /> : <VisibilityIcon />}
+            </button>
+            <input
+              name="password"
+              placeholder="Password"
+              type={`${passVisibility ? "text" : "password"}`}
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
           <button
             type="submit"
             className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
@@ -101,12 +143,9 @@ const Signup = ({ changeTab }) => {
         </form>
         <p className="text-sm text-center text-gray-600 mt-4">
           Already have an account?{" "}
-          <button
-            onClick={() => changeTab("Login")}
-            className="text-blue-600 hover:underline"
-          >
-            Log in
-          </button>
+          <Link to="/login">
+            <button className="text-blue-600 hover:underline">Log in</button>
+          </Link>
         </p>
       </div>
     </div>

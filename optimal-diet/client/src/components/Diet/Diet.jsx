@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
 import { addDiet } from "../../states/user/userSlice";
 import { uid } from "uid/single";
+import { useNavigate } from "react-router-dom";
 
 import { SelectedFoods } from "./SelectedFoods";
 import { ResultsTable } from "./ResultsTable";
@@ -21,15 +23,14 @@ export const Diet = ({
   computationProcess,
   resetSelection,
   forViewing,
-  setView,
 }) => {
   const user = useSelector((state) => state.user.value);
   const [mode, setMode] = useState("table");
   const [saving, setSaving] = useState(false);
   const [title, setTitle] = useState("");
   const [viewComputationMode, setViewComputationMode] = useState(false);
-
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const toggleMode = () =>
     setMode((prevMode) => (prevMode === "table" ? "pie" : "table"));
@@ -128,7 +129,7 @@ export const Diet = ({
           {forViewing && (
             <button
               className="w-52 mt-5 px-3 py-1 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition"
-              onClick={() => setView(false)}
+              onClick={() => navigate("/dietlists")}
             >
               Back
             </button>

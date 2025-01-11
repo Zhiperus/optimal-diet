@@ -12,6 +12,7 @@ export const ResultsTable = ({ selectedFoodNames, foodsServing, foods }) => (
       </thead>
       <tbody>
         {selectedFoodNames.map((name, index) => {
+          console.log(foodsServing);
           const serving = foodsServing[index];
           if (serving !== 0) {
             const cost = (foods[name].price * serving).toFixed(2);

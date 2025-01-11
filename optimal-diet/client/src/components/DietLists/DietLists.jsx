@@ -1,11 +1,8 @@
 import React, { useState } from "react";
 import { DietCard } from "./DietCard";
 import { useSelector } from "react-redux";
-import { Diet } from "../Diet/Diet";
 
-const Diets = () => {
-  const [view, setView] = useState(false);
-  const [data, setData] = useState({});
+export const DietList = ({ setData }) => {
   const user = useSelector((state) => state.user.value);
 
   return (
@@ -14,7 +11,7 @@ const Diets = () => {
         <h2 className="flex justify-center items-center w-screen h-screen ">
           Login to view your diets!
         </h2>
-      ) : !view ? (
+      ) : (
         <div className="flex flex-col w-screen h-screen bg-gray-100 pl-14">
           <h1 className="flex font-bold text-3xl justify-center mt-5">
             Saved Diets
@@ -26,30 +23,17 @@ const Diets = () => {
             {user.diets.map((diet) => {
               return (
                 <DietCard
-                  key={1}
+                  key={diet.UID}
                   date={diet.date}
                   cost={diet.Z}
                   data={diet}
-                  setView={setView}
                   setData={setData}
                 />
               );
             })}
           </div>
         </div>
-      ) : (
-        <Diet
-          selectedFoodNames={data.selectedFoodNames}
-          basicSolution={data.basicSolution}
-          Z={data.Z}
-          colors={data.colors}
-          iterations={data.iterations}
-          forViewing={true}
-          setView={setView}
-        />
       )}
     </>
   );
 };
-
-export default Diets;

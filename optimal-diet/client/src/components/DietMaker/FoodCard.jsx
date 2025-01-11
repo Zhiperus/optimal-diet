@@ -1,5 +1,7 @@
 import React, { useState } from "react";
+
 import { useDispatch } from "react-redux";
+
 import { add, del } from "../../states/foods/foodsSlice";
 
 export const FoodCard = ({ name, isClicked, image }) => {

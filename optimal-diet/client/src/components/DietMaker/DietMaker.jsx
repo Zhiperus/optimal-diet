@@ -1,25 +1,25 @@
 import React, { useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Alert from "@mui/material/Alert";
 import SearchIcon from "@mui/icons-material/Search";
 
 import { FoodCard } from "./FoodCard";
-import { Diet } from "../Diet/Diet";
 import { ActionButtons } from "./ActionButtons";
 
 import { set } from "../../states/foods/foodsSlice";
 
 import foods from "../../lib/foods";
 
-export const DietMaker = () => {
-  const [data, setData] = useState({});
+export const DietMaker = ({ setData }) => {
   const [search, setSearch] = useState("");
   const [alert, setAlert] = useState(false);
   const foodNames = Object.keys(foods);
   const selectedFoodNames = useSelector((state) => state.foods.value);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const resetSelection = () => {
     dispatch(set([]));
@@ -91,6 +91,8 @@ export const DietMaker = () => {
           setData({});
           setAlert(false);
         }, 2100);
+      } else {
+        navigate("results");
       }
     } catch (error) {
       console.error("Error posting data:", error);
@@ -99,58 +101,47 @@ export const DietMaker = () => {
 
   return (
     <div className="flex flex-col w-full h-screen overflow-hidden bg-gray-100">
-      {Object.keys(data).length === 0 || data.status === "error" ? (
-        <div className="relative w-full h-full flex flex-col px-8 py-4">
-          <ActionButtons
-            selectedQuantity={selectedFoodNames.length}
-            handleSubmit={handleSubmit}
-            resetSelection={resetSelection}
-            selectAllFoods={selectAllFoods}
-          />
-
-          <div className="flex w-96 items-center bg-white shadow-md rounded-full px-4 py-2 mb-6">
-            <SearchIcon className="text-blue-500" />
-            <input
-              className="flex-grow bg-transparent focus:outline-none px-4 text-gray-700"
-              placeholder="Search foods..."
-              value={search}
-              onChange={handleSearchChange}
-            />
-          </div>
-
-          <div className="flex-1 overflow-y-auto">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-5 ml-10">
-              {foodNames
-                .filter((name) =>
-                  name.toLowerCase().includes(search.toLowerCase())
-                )
-                .map((foodName) => (
-                  <FoodCard
-                    key={`${foodName}-${selectedFoodNames.includes(foodName)}`}
-                    name={foodName}
-                    isClicked={selectedFoodNames.includes(foodName)}
-                    image={foods[foodName].image}
-                  />
-                ))}
-            </div>
-          </div>
-
-          {alert && data.status === "error" && (
-            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2">
-              <Alert severity="error">{data.message}</Alert>
-            </div>
-          )}
-        </div>
-      ) : (
-        <Diet
-          selectedFoodNames={selectedFoodNames}
-          foodsServing={data.basicSolution}
-          cost={data.Z}
-          computationProcess={data.iterations}
+      <div className="relative w-full h-full flex flex-col px-8 py-4">
+        <ActionButtons
+          selectedQuantity={selectedFoodNames.length}
+          handleSubmit={handleSubmit}
           resetSelection={resetSelection}
-          forViewing={false}
+          selectAllFoods={selectAllFoods}
         />
-      )}
+
+        <div className="flex w-96 items-center bg-white shadow-md rounded-full px-4 py-2 mb-6">
+          <SearchIcon className="text-blue-500" />
+          <input
+            className="flex-grow bg-transparent focus:outline-none px-4 text-gray-700"
+            placeholder="Search foods..."
+            value={search}
+            onChange={handleSearchChange}
+          />
+        </div>
+
+        <div className="flex-1 overflow-y-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-5 ml-10">
+            {foodNames
+              .filter((name) =>
+                name.toLowerCase().includes(search.toLowerCase())
+              )
+              .map((foodName) => (
+                <FoodCard
+                  key={`${foodName}-${selectedFoodNames.includes(foodName)}`}
+                  name={foodName}
+                  isClicked={selectedFoodNames.includes(foodName)}
+                  image={foods[foodName].image}
+                />
+              ))}
+          </div>
+        </div>
+
+        {alert && data.status === "error" && (
+          <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2">
+            <Alert severity="error">{data.message}</Alert>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
