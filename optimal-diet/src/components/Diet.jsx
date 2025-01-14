@@ -1,5 +1,5 @@
 import React, { useState } from "react"; // Importing React and useState hook
-import foods from "../foods/foods"; // Importing foods data
+import foods from "../lib/foods"; // Importing foods data
 import DietPie from "./DietPie"; // Importing the DietPie component for displaying the pie chart
 import PieChartIcon from "@mui/icons-material/PieChart"; // Importing the PieChartIcon for switching modes
 import TableChartIcon from "@mui/icons-material/TableChart"; // Importing the TableChartIcon for switching modes
@@ -9,7 +9,7 @@ import { addDiet } from "../states/user/userSlice"; // Importing Redux action to
 import { uid } from "uid/single"; // Importing UID generator for creating unique IDs
 
 // Diet component for displaying and interacting with the diet data
-const Diet = ({
+export const Diet = ({
   selectedFoodNames, // List of selected food names
   basicSolution, // The calculated servings for each selected food
   Z, // The cost of the optimal diet
@@ -235,5 +235,3 @@ const Diet = ({
     </>
   );
 };
-
-export default Diet; // Exporting the Diet component

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DietMaker } from "./components/DietMaker";
+import { DietMaker } from "./components/DietMaker/DietMaker";
 import { Navbar } from "./components/Navbar";
 import Diets from "./components/Diets";
 import Login from "./components/Login";

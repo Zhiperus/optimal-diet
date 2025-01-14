@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { add, del } from "../states/foods/foodsSlice";
+import { add, del } from "../../states/foods/foodsSlice";
 
-export const FoodCard = ({ name, clicked, image }) => {
-  const [click, setClick] = useState(clicked);
+export const FoodCard = ({ name, isClicked, image }) => {
+  const [click, setClick] = useState(isClicked);
   const dispatch = useDispatch();
 
   const handleClick = () => {
