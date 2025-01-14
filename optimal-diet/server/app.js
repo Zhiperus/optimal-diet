@@ -15,8 +15,6 @@ app.get("/", cors(), async (req, res) => {
   try {
     const check = await collection.findOne({ email: email });
 
-    console.log(check);
-
     if (check != null) {
       const { _id, image, name, diets } = check;
 
@@ -59,10 +57,12 @@ app.post("/signup", upload.single("image"), async (req, res) => {
       res.status(409).send("User already exists!");
     } else {
       const response = await collection.insertMany([data]);
+
       res.json({
         status: "success",
         _id: response[0]._id,
         name: name,
+        image: response[0].image,
       });
     }
   } catch (e) {
@@ -72,7 +72,7 @@ app.post("/signup", upload.single("image"), async (req, res) => {
 
 app.put("/logout", async (req) => {
   const { _id, diets } = req.body;
-  console.log(_id);
+
   try {
     await collection.updateOne(
       { _id: new mongoose.Types.ObjectId(_id) },
