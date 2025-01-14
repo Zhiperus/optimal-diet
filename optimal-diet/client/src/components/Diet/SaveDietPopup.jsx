@@ -1,9 +1,10 @@
 import React from "react";
 
-export const SaveDietPopup = ({ title, setTitle, saveDiet, closePopup }) => (
+export const SaveDietPopup = ({ title, setTitle, saveDiet, setIsMouseIn }) => (
   <div
     className="absolute place-self-center top-56 flex flex-col items-center gap-4 bg-gray-50 p-5"
-    onMouseLeave={closePopup}
+    onMouseOver={() => setIsMouseIn(true)}
+    onMouseLeave={() => setIsMouseIn(false)}
   >
     <input
       type="text"

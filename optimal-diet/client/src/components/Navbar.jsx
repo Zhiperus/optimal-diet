@@ -19,9 +19,7 @@ export const Navbar = () => {
 
   const userName = user.name || "Guest";
   const profileImage =
-    user.image !== ""
-      ? "data:image/jpg;base64," + user.image
-      : "https://via.placeholder.com/150";
+    user.image !== "" ? user.image : "https://via.placeholder.com/150";
 
   const tabs = [
     { label: "Diets", path: "/dietlists", icon: <MenuBookIcon /> },

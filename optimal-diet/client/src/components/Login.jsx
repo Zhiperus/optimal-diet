@@ -1,30 +1,29 @@
 import React, { useState } from "react";
-
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-
 import { toBase64 } from "../utils/utilities";
 import { login } from "../states/user/userSlice";
 import md5 from "md5";
 
 const Login = () => {
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [passVisibility, setPassVisibility] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
+    setError(""); // Clear any previous errors
     const email = e.target.email.value;
     const password = md5(e.target.password.value);
-    let response;
 
     try {
-      response = await axios.get("http://localhost:3000", {
+      const response = await axios.get("http://localhost:3000", {
         params: { email, password },
       });
 
@@ -35,11 +34,16 @@ const Login = () => {
         diets,
       } = response.data;
 
-      const image = toBase64(buffer);
+      const image = "data:image/jpg;base64," + toBase64(buffer);
       dispatch(login({ _id, image, name, diets }));
       navigate("/dietlists");
-    } catch (e) {
-      setError(e.response.data);
+    } catch (err) {
+      setError(
+        err.response?.data?.message || "An error occurred. Please try again."
+      );
+      console.error(err);
+    } finally {
+      setLoading(false); // Ensure loading is reset
     }
   };
 
@@ -78,15 +82,19 @@ const Login = () => {
           </div>
           <button
             type="submit"
-            className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
+            disabled={loading}
+            className={`w-full py-2 rounded-lg transition duration-300 ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700 text-white"
+            }`}
           >
-            Log In
+            {loading ? "Logging In..." : "Log In"}
           </button>
         </form>
         <p className="text-sm text-gray-600 text-center mt-4">
           Don't have an account?{" "}
           <Link to="/signup">
-            {" "}
             <button className="text-blue-600 hover:underline">Sign Up</button>
           </Link>
         </p>

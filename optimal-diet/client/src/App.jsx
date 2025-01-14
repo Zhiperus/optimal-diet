@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 
 import Login from "./components/Login";
 import Signup from "./components/Signup";
@@ -12,7 +12,6 @@ function App() {
     <div className="flex w-screen h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <Navbar />
       <Routes>
-        <Route path="/" index element={<DietMakerRouter />} />
         <Route path="/dietmaker/*" element={<DietMakerRouter />} />
         <Route path="/dietlists/*" element={<DietListsRouter />} />
         <Route path="/login" element={<Login />} />

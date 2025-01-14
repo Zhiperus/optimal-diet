@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 
 import { DietList } from "./DietLists";
 import { Diet } from "../Diet/Diet";
@@ -17,9 +17,9 @@ export const DietListsRouter = () => {
           element={
             <Diet
               selectedFoodNames={data.selectedFoodNames}
-              foodsServing={data.basicSolution}
-              cost={data.Z}
-              computationProcess={data.iterations}
+              foodsServing={data.foodsServing}
+              cost={data.cost}
+              computationProcess={data.computationProcess}
               forViewing={true}
             />
           }

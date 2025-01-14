@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
 
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import { delDiet } from "../../states/user/userSlice";
 import foods from "../../lib/foods";
+import options from "../../lib/options";
+import { Diet } from "../Diet/Diet";
 
 export const DietCard = ({ date, cost, title, data, setData }) => {
   const [onDel, setOnDel] = useState(false);
@@ -30,7 +34,6 @@ export const DietCard = ({ date, cost, title, data, setData }) => {
       } rounded-3xl flex-col justify-between items-center shadow-md`}
       onClick={() => {
         if (!onDel) {
-          console.log(data);
           setData(data);
           navigate("results");
         }
@@ -47,13 +50,13 @@ export const DietCard = ({ date, cost, title, data, setData }) => {
 
       {/* Title Section */}
       <div className="w-full bg-gray-100 py-2 px-4 text-center">
-        <h3 className="font-bold text-lg text-gray-800 truncate">Hello</h3>
+        <h3 className="font-bold text-lg text-gray-800 truncate">{title}</h3>
       </div>
 
       {/* Content Section */}
       <div className="flex flex-col justify-center items-center p-3 text-center">
         <p className="text-sm text-gray-500">
-          Price: {cost} <br />
+          Price: {options.currency} {cost} <br />
           Date: {date}
         </p>
       </div>

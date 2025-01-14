@@ -27,6 +27,7 @@ export const Diet = ({
   const user = useSelector((state) => state.user.value);
   const [mode, setMode] = useState("table");
   const [saving, setSaving] = useState(false);
+  const [isMouseIn, setIsMouseIn] = useState(false);
   const [title, setTitle] = useState("");
   const [viewComputationMode, setViewComputationMode] = useState(false);
   const dispatch = useDispatch();
@@ -48,6 +49,7 @@ export const Diet = ({
       })
     );
     setSaving(false);
+    navigate("/dietlists");
   };
 
   if (viewComputationMode) {
@@ -61,7 +63,10 @@ export const Diet = ({
   }
 
   return (
-    <div className="flex flex-col md:flex-row w-full h-screen bg-gray-100">
+    <div
+      className="flex flex-col md:flex-row w-full h-screen bg-gray-100"
+      onClick={() => saving && !isMouseIn && setSaving(false)}
+    >
       <div className="flex flex-col md:basis-1/4 bg-gray-800 text-white p-6">
         <SelectedFoods
           selectedFoodNames={selectedFoodNames}
@@ -76,7 +81,7 @@ export const Diet = ({
             title={title}
             setTitle={setTitle}
             saveDiet={saveDiet}
-            closePopup={() => setSaving(false)}
+            setIsMouseIn={setIsMouseIn}
           />
         )}
 

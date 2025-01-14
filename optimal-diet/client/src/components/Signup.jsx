@@ -8,6 +8,7 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import CancelIcon from "@mui/icons-material/Cancel";
+import imageCompression from "browser-image-compression";
 
 import { login } from "../states/user/userSlice";
 import { toBase64 } from "../utils/utilities";
@@ -19,6 +20,17 @@ const Signup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const compressImage = async (file) => {
+    const options = {
+      maxSizeMB: 0.2, // 200 KB
+      maxWidthOrHeight: 300, // Resize to 300px
+    };
+
+    const compressedFile = await imageCompression(file, options);
+
+    return compressedFile;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -27,7 +39,15 @@ const Signup = () => {
     const password = e.target.password.value;
 
     const formData = new FormData();
-    formData.append("image", image);
+    if (image) {
+      try {
+        const compressedFile = await compressImage(image);
+        formData.append("image", compressedFile);
+      } catch (err) {
+        setError("Error compressing image");
+        return;
+      }
+    }
     formData.append("name", name);
     formData.append("email", email);
     formData.append("password", md5(password));
@@ -40,7 +60,6 @@ const Signup = () => {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-
       const {
         _id,
         image: { data: buffer },
@@ -49,7 +68,7 @@ const Signup = () => {
       dispatch(
         login({
           _id: _id,
-          image: toBase64(buffer),
+          image: "data:image/jpg;base64," + toBase64(buffer),
           name: name,
           diets: [],
         })

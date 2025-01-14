@@ -40,8 +40,9 @@ export const DietList = ({ setData }) => {
               return (
                 <DietCard
                   key={diet.UID}
+                  title={diet.title}
                   date={diet.date}
-                  cost={diet.Z}
+                  cost={diet.cost}
                   data={diet}
                   setData={setData}
                 />

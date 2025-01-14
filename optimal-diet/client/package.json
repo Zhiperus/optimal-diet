@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "./dietmaker",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -16,7 +17,9 @@
     "@mui/icons-material": "^6.1.8",
     "@mui/material": "^6.1.8",
     "@reduxjs/toolkit": "^2.3.0",
+    "@tanstack/react-query": "^5.64.1",
     "axios": "^1.7.7",
+    "browser-image-compression": "^2.0.2",
     "chart.js": "^4.4.6",
     "chartjs-plugin-datalabels": "^2.2.0",
     "md5": "^2.3.0",
