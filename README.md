@@ -61,5 +61,5 @@ This app provides an intuitive solution for optimizing diet costs while meeting 
      npm run start
      ```
 
-5. Open your browser and navigate to `http://localhost:3000` to use the app.
+5. Open your browser and navigate to `http://localhost:5173` to use the app.
 
